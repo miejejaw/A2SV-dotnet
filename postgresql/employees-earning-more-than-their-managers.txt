@@ -1,0 +1,3 @@
+
+SELECT emp1.name AS Employee FROM employee emp1,employee emp2 
+WHERE emp1.managerId = emp2.id AND emp1.salary>emp2.salary;
