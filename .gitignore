@@ -1,0 +1,90 @@
+# ASP.NET Core
+.vscode/
+bin/
+obj/
+PublishOutput/
+*.dbmdl
+*.jfm
+*.sln.docstates
+
+# User-specific files
+*.suo
+*.user
+*.userprefs
+*.vscode/
+
+# Test Results
+TestResults/
+
+# Entity Framework
+/appsettings.Development.json
+/appsettings.Staging.json
+/appsettings.Production.json
+/appsettings.Local.json
+/appsettings.Test.json
+
+# MSTest
+TestResults/
+
+# NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+
+# Rider
+.idea/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.iml
+
+# Log files
+*.logs
+*.log
+
+# Test project artifacts
+[Tt]est[Rr]esult*/
+[Ee]xports/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+__snapshots__/
+
+# Visual Studio Code
+.vscode/
+.history/
+settings.json
+
+# Rider
+.idea/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.iml
+
+# Log files
+*.logs
+*.log
+
+# Mac OS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
