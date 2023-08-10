@@ -7,15 +7,16 @@ using Blog.Data;
 using Blog.Controller;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace Blog.Tests;
 
 //CommentControllerTests
 
 [Collection("SequentialTests")]
-public class CommentControllerTest1 
+public class CommentControllerPostTest 
 {
     private readonly AppDbContext _context;
-    public CommentControllerTest1(){
+    public CommentControllerPostTest(){
         _context = ContextGenerator.Generate();
     }
 
@@ -32,15 +33,15 @@ public class CommentControllerTest1
 }
 
  [Collection("SequentialTests")]
- public class CommentControllerTest2
+ public class CommentControllerGetTest
  {
     private readonly AppDbContext _context;
-    public CommentControllerTest2(){
+    public CommentControllerGetTest(){
         _context = ContextGenerator.Generate();
     }
 
     [Fact]
-    public void Comment_Get(){
+    public void TestOkResult(){
         
         var controller = new CommentManagerController(_context);     
         // Act
@@ -49,22 +50,39 @@ public class CommentControllerTest1
         // Assert
         var okObjectResult = Assert.IsType<OkObjectResult>(result);
         var comments = Assert.IsType<List<Comment>>(okObjectResult.Value);
-        // Assert.Single(comments);
+  
         Assert.Equal(2, comments.Count);
     }
+
+    // [Fact]
+    // public void TestOkResultById(){
+    //     var controller = new CommentManagerController(_context);
+    //     var result = controller.Get(1);
+        
+    //     Assert.IsType<OkResult>(result);
+    // }
+
+    // [Fact]
+    // public void TestNotFoundResult(){
+    //     var controller = new CommentManagerController(_context);
+    //     var result = controller.Get();
+
+    //     Assert.IsType<NotFoundResult>(result);
+    // }
+
  }
 
 
  [Collection("SequentialTests")]
- public class CommentControllerTest3
+ public class CommentControllerPutTest
  {
     private readonly AppDbContext _context;
-    public CommentControllerTest3(){
+    public CommentControllerPutTest(){
         _context = ContextGenerator.Generate();
     }
 
     [Fact]
-    public void Comment_Put(){
+    public void TestNoContentResult(){
         var controller = new CommentManagerController(_context);
         var updatedComment = new Comment { Text = "Updated Comment",PostId = 2};
 
@@ -72,7 +90,24 @@ public class CommentControllerTest1
         var result = controller.Put(2, updatedComment);
 
         // Assert
-        Assert.IsType<OkResult>(result);
+        Assert.IsType<NoContentResult>(result);
+
+        var commentInDatabase = _context.Comments.SingleOrDefault(c => c.Id == 2);
+        Assert.NotNull(commentInDatabase);
+        Assert.Equal(updatedComment.Text, commentInDatabase.Text);
+        Assert.Equal(updatedComment.PostId, commentInDatabase.PostId);
+    }
+
+    [Fact]
+    public void TestCreatedAtActionResult(){
+        var controller = new CommentManagerController(_context);
+        var updatedComment = new Comment { Text = "Updated Comment",PostId = 2};
+
+        // Act
+        var result = controller.Put(2, updatedComment);
+
+        // Assert
+        Assert.IsType<CreatedAtActionResult>(result);
 
         var commentInDatabase = _context.Comments.SingleOrDefault(c => c.Id == 2);
         Assert.NotNull(commentInDatabase);
@@ -83,14 +118,14 @@ public class CommentControllerTest1
 
 
 [Collection("SequentialTests")]
- public class CommentControllerTest4
+ public class CommentControllerDeleteTest
  {
     private readonly AppDbContext _context;
-    public CommentControllerTest4(){
+    public CommentControllerDeleteTest(){
         _context = ContextGenerator.Generate();
     }
     [Fact]
-    public void Comment_Delete(){
+    public void TestNoContentResult(){
         
             var controller = new CommentManagerController(_context);
 
@@ -104,4 +139,13 @@ public class CommentControllerTest1
             Assert.Null(_context.Comments.FirstOrDefault(c => c.Id == 1));
             Assert.NotNull(_context.Comments.FirstOrDefault(c => c.Id == 2));
     }
+
+    [Fact]
+    public void TestNotFoundResult(){
+        var controller = new CommentManagerController(_context);
+        var result = controller.Delete(10);
+
+        Assert.IsType<NotFoundResult>(result);
+    }
+
  }

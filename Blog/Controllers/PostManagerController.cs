@@ -46,25 +46,28 @@ public class PostManagerController : ControllerBase
 
 
     [HttpPost]
-    public ActionResult Post([FromBody] BlogPost blogPost){
+    public IActionResult Post([FromBody] BlogPost blogPost){
         _context.BlogPosts.Add(blogPost);
         _context.SaveChanges();
         
-        return Ok();
+        return CreatedAtAction(nameof(Get), new { id = blogPost.Id }, blogPost);
+
     }
 
     [HttpPut]
     [Route("{id:int}")]
-    public ActionResult Put(int id, [FromBody] BlogPost updatedFields) {
+    public IActionResult Put(int id, [FromBody] BlogPost updatedFields) {
         var existingPost = _context.BlogPosts.SingleOrDefault(post => post.Id == id);
-        if(existingPost == null)
-            return NotFound();
+        if(existingPost == null){
+            _context.BlogPosts.Add(updatedFields);
+            return CreatedAtAction(nameof(Get), new { id = updatedFields.Id }, updatedFields);
+        }
 
         updatedFields.Id = existingPost.Id;
         _context.Entry(existingPost).CurrentValues.SetValues(updatedFields);
         _context.SaveChanges();
         
-        return Ok();
+        return NoContent();
     }
 
     [HttpDelete]

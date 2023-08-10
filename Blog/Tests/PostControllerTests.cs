@@ -12,10 +12,10 @@ namespace Blog.Tests;
 //PostControllerTests
 
 [Collection("SequentialTests")]
-public class PostControllerTest1 
+public class PostControllerPostTest 
 {
     private readonly AppDbContext _context;
-    public PostControllerTest1(){
+    public PostControllerPostTest(){
         _context = ContextGenerator.Generate();
     }
 
@@ -32,15 +32,15 @@ public class PostControllerTest1
 }
 
  [Collection("SequentialTests")]
- public class PostControllerTest2
+ public class PostControllerGetTest
  {
     private readonly AppDbContext _context;
-    public PostControllerTest2(){
+    public PostControllerGetTest(){
         _context = ContextGenerator.Generate();
     }
 
     [Fact]
-    public void BlogPost_Get(){
+    public void TestOkResult(){
         
         var controller = new PostManagerController(_context);  
         // Act
@@ -52,19 +52,34 @@ public class PostControllerTest1
         // Assert.Single(posts);
         Assert.Equal(2, posts.Count);
     }
+
+    [Fact]
+    public void TestOkResultById(){
+        var controller = new PostManagerController(_context);
+        var result = controller.Get(1);
+        
+        Assert.IsType<OkResult>(result);
+    }
+    [Fact]
+    public void TestNotFoundResult(){
+        var controller = new PostManagerController(_context);
+        var result = controller.Delete(10);
+
+        Assert.IsType<NotFoundResult>(result);
+    }
  }
 
 
  [Collection("SequentialTests")]
- public class PostControllerTest3
+ public class PostControllerPutTest
  {
     private readonly AppDbContext _context;
-    public PostControllerTest3(){
+    public PostControllerPutTest(){
         _context = ContextGenerator.Generate();
     }
 
     [Fact]
-    public void BlogPost_Put(){
+    public void TestNoContentResult(){
         var controller = new PostManagerController(_context);
         var updatedPost = new BlogPost { Title = "Updated Post",Content = "content 4"};
 
@@ -72,25 +87,40 @@ public class PostControllerTest1
         var result = controller.Put(2, updatedPost);
 
         // Assert
-        Assert.IsType<OkResult>(result);
+        Assert.IsType<NoContentResult>(result);
 
         var postInDatabase = _context.BlogPosts.SingleOrDefault(c => c.Id == 2);
         Assert.NotNull(postInDatabase);
         Assert.Equal(updatedPost.Title, postInDatabase.Title);
         Assert.Equal(updatedPost.Content, postInDatabase.Content);
     }
+
+    [Fact]
+    public void TestCreatedAtActionResult(){
+        var controller = new PostManagerController(_context);
+        
+        var updatedPost = new BlogPost { Title = "Updated Post",Content = "content 8"};
+        //Act
+        var result = controller.Put(8,updatedPost);
+        //Assert
+        Assert.IsType<CreatedAtActionResult>(result);
+
+        var postInDatabase = _context.BlogPosts.SingleOrDefault(c => c.Id == 8);
+        Assert.NotNull(postInDatabase);
+        Assert.Equal(updatedPost.Title, postInDatabase.Title);
+        Assert.Equal(updatedPost.Content, postInDatabase.Content);
+    }
  }
 
-
 [Collection("SequentialTests")]
- public class PostControllerTest4
+ public class PostControllerDeleteTest
  {
     private readonly AppDbContext _context;
-    public PostControllerTest4(){
+    public PostControllerDeleteTest(){
         _context = ContextGenerator.Generate();
     }
     [Fact]
-    public void BlogPost_Delete(){
+    public void TestNoContentResult(){
         
         var controller = new PostManagerController(_context);
 
@@ -103,5 +133,13 @@ public class PostControllerTest1
         // Verify that the post was actually deleted from the database
         Assert.Null(_context.BlogPosts.FirstOrDefault(c => c.Id == 1));
         Assert.NotNull(_context.BlogPosts.FirstOrDefault(c => c.Id == 2));
+    }
+
+    [Fact]
+    public void TestNotFoundResult(){
+        var controller = new PostManagerController(_context);
+        var result = controller.Delete(10);
+
+        Assert.IsType<NotFoundResult>(result);
     }
  }

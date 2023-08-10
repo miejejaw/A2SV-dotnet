@@ -21,25 +21,27 @@ public class CommentManagerController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult Post( Comment comment){
+    public IActionResult Post( Comment comment){
         _context.Comments.Add(comment);
         _context.SaveChanges();
 
-        return Ok();
+        return CreatedAtAction(nameof(Get), new { id = comment.Id }, comment);
     }
 
     [HttpPut]
     [Route("{id:int}")]
-    public ActionResult Put(int id, [FromBody] Comment updatedFields) {
+    public IActionResult Put(int id, [FromBody] Comment updatedFields) {
+
         var existingComment = _context.Comments.SingleOrDefault(com => com.Id == id);
         if(existingComment == null){
-            return NotFound();
+            _context.Comments.Add(updatedFields);
+            return CreatedAtAction(nameof(Get), new { id = updatedFields.Id }, updatedFields);
         }
 
         updatedFields.Id = existingComment.Id;
         _context.Entry(existingComment).CurrentValues.SetValues(updatedFields);
         _context.SaveChanges();
-        return Ok();
+        return NoContent();
     }
 
     [HttpDelete]
