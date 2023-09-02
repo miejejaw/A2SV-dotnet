@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Comment.Queries.GetAllCommets.GetAllCommetsByPostId
 {
-    public class GetAllCommentsByPostIdQuery : IRequest<List<CommentResponseDTO>>
+    public class GetAllCommentsByPostIdQuery : IRequest<List<CommentResponseDto>>
     {
         public int PostId { get; set; }
     }

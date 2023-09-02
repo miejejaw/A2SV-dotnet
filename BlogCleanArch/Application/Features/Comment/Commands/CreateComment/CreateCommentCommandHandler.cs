@@ -21,7 +21,7 @@ namespace Application.Features.Comment.Commands.DeleteComment
         {
             var comment = _mapper.Map<CommentEntity>(request.NewComment);
 
-            var res = await _commentRepository.CreateAsync(comment);
+            var res = await _commentRepository.CreateAsync(comment,cancellationToken);
             return _mapper.Map<CommentResponseDto>(res);
         }
     }

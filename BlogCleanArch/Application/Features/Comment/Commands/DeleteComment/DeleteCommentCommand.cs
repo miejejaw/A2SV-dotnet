@@ -9,6 +9,6 @@ namespace Application.Features.Comment.Commands.DeleteComment
 {
     public class DeleteCommentCommand : IRequest<Unit>
     {
-        public int Id { get; set; }
+        public int CommentId { get; set; }
     }
 }

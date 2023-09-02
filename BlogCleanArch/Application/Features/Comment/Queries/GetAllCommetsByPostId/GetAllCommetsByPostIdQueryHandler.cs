@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Comment.Queries.GetAllCommets.GetAllCommetsByPostId
 {
-    public class GetAllCommetsByPostIdQueryHandler : IRequestHandler<GetAllCommentsByPostIdQuery, List<CommentResponseDTO>>
+    public class GetAllCommetsByPostIdQueryHandler : IRequestHandler<GetAllCommentsByPostIdQuery, List<CommentResponseDto>>
     {
         private readonly ICommentRepository _commentRepository;
         private readonly IMapper _mapper;
@@ -23,7 +23,7 @@ namespace Application.Features.Comment.Queries.GetAllCommets.GetAllCommetsByPost
             _mapper = mapper;
         }
 
-        public async Task<List<CommentResponseDTO>> Handle(GetAllCommentsByPostIdQuery request, CancellationToken cancellationToken)
+        public async Task<List<CommentResponseDto>> Handle(GetAllCommentsByPostIdQuery request, CancellationToken cancellationToken)
         {
             var validator = new GetCommentByPostIdQueryValidator();
             var validationResult = validator.Validate(request);
@@ -34,7 +34,7 @@ namespace Application.Features.Comment.Queries.GetAllCommets.GetAllCommetsByPost
             }
 
             var comments = await _commentRepository.GetCommentByPostId(request.PostId);
-            return _mapper.Map<List<CommentResponseDTO>>(comments);
+            return _mapper.Map<List<CommentResponseDto>>(comments);
         }
     }
 }

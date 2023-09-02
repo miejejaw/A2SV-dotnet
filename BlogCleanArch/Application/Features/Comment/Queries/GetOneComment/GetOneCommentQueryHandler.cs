@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Comment.Queries.GetOneComment
 {
-    public class GetOneCommentQueryHandler : IRequestHandler<GetOneCommentQuery, CommentResponseDTO>
+    public class GetOneCommentQueryHandler : IRequestHandler<GetOneCommentQuery, CommentResponseDto>
     {
         private readonly ICommentRepository _commentRepository;
         private readonly IMapper _mapper;
@@ -20,9 +20,10 @@ namespace Application.Features.Comment.Queries.GetOneComment
             _commentRepository = commentRepository;
             _mapper = mapper;
         }
-        public async Task<CommentResponseDTO> Handle(GetOneCommentQuery request, CancellationToken cancellationToken)
+        public async Task<CommentResponseDto> Handle(GetOneCommentQuery request, CancellationToken cancellationToken)
         {
-            return _mapper.Map<CommentResponseDTO>(await _commentRepository.GetByIdAsync(request.Id));
+            var comment = await _commentRepository.GetByIdAsync(request.Id,cancellationToken);
+            return _mapper.Map<CommentResponseDto>(comment);
         }  
     }
 }

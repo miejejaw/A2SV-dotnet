@@ -11,9 +11,7 @@ namespace Domain.Entities
     public class CommentEntity : BaseDomainEntity
     {
         public int PostId { get; set; }
-        public int UserId { get; set; }
-        public UserEntity? User { get; set; }
+        public string Text { get; set; } = string.Empty;
         public PostEntity? Post { get; set; }
-        public string? Text { get; set; }
     }
 }

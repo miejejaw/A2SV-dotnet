@@ -3,11 +3,7 @@ using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Application.Exceptions;
 
 namespace Application.Features.Comment.Commands.UpdateComment
 {
@@ -20,11 +16,14 @@ namespace Application.Features.Comment.Commands.UpdateComment
             _commentRepository = commentRepository;
             _mapper = mapper;
         }
-        public async Task<Unit> Handle(UpdateCommentCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateCommentCommand command, CancellationToken cancellationToken)
         {
-            
-            var new_comment = _mapper.Map<CommentEntity>(request.UpdateComment);
-            await _commentRepository.UpdateAsync(request.Id, new_comment);
+            var old_comment = await _commentRepository.GetByIdAsync(command.CommentId,cancellationToken);
+            if(old_comment == null)
+                throw new NotFoundException($"Comment with id {command.CommentId} does't exist!",command);
+
+            var new_comment = _mapper.Map<CommentEntity>(command.UpdateComment);
+            await _commentRepository.UpdateAsync(old_comment, new_comment,cancellationToken);
             return Unit.Value;
         }
     }

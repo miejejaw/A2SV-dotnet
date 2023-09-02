@@ -17,7 +17,7 @@ public class GetAllPostsRequestHandler : IRequestHandler<GetAllPostsRequest,IRea
 
     public async Task<IReadOnlyList<PostResponseDto>> Handle(GetAllPostsRequest request, CancellationToken cancellationToken)
     {
-        var posts =  await _postRepository.GetAllAsync();
+        var posts =  await _postRepository.GetAllAsync(cancellationToken);
         return _mapper.Map<IReadOnlyList<PostResponseDto>>(posts);
     }
 }

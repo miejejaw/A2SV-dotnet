@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Features.Comment.Queries.GetAllCommets
+namespace Application.Features.Comment.Queries.GetAllComments
 {
-    public class GetAllCommentsQuery : IRequest<List<CommentResponseDTO>>
+    public class GetAllCommentsQuery : IRequest<List<CommentResponseDto>>
     {
     }
 }

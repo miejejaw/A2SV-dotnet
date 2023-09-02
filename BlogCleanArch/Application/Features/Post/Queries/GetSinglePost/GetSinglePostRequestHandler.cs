@@ -16,7 +16,7 @@ public class GetSinglePostRequestHandler : IRequestHandler<GetSinglePostRequest,
 
     public async Task<PostResponseDto> Handle(GetSinglePostRequest request, CancellationToken cancellationToken)
     {
-        var post =  await _postRepository.GetByIdAsync(request.PostId);
+        var post =  await _postRepository.GetByIdAsync(request.PostId,cancellationToken);
         return _mapper.Map<PostResponseDto>(post);
     }
 }

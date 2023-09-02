@@ -1,12 +1,7 @@
 ﻿using Application.Contracts;
+using Application.Exceptions;
 using AutoMapper;
-using FluentValidation;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Features.Comment.Commands.DeleteComment
 {
@@ -19,24 +14,17 @@ namespace Application.Features.Comment.Commands.DeleteComment
             _commentRepository = commentRepository;
             _mapper = mapper;
         }
-        public async Task<Unit> Handle(DeleteCommentCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(DeleteCommentCommand command, CancellationToken cancellationToken)
         {
-            var validator = new DeleteCommentCommandValidator();
-            var validationResult = validator.Validate(request);
-            if (!validationResult.IsValid)
+
+            var comment = await _commentRepository.GetByIdAsync(command.CommentId,cancellationToken);
+
+            if (comment == null)
             {
-                throw new ValidationException(validationResult.Errors);
+                throw new NotFoundException($"Comment with id {command.CommentId} does't exist!",command);
             }
-
-            var comment = await _commentRepository.GetByIdAsync(request.Id);
-
-            if (comment != null)
-            {
-                throw new Exception($"Comment with id {request.Id} does't exist!");
-            }
-            // before this we have to check if the user is trying to delete his comment
-            await _commentRepository.DeleteAsync(request.Id);
-
+ 
+            await _commentRepository.DeleteAsync(comment, cancellationToken);
             return Unit.Value;
         }
     }

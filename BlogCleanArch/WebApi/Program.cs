@@ -1,3 +1,6 @@
+using Domain.Entities;
+using Infrastructure.services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +9,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.Configure<GptApiService>(builder.Configuration.GetSection("GptApi"));
+// builder.Services.AddSingleton<IGptApiService, GptApiService>();
+
 
 var app = builder.Build();
 
@@ -17,7 +24,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();

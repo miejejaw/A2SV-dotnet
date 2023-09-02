@@ -21,7 +21,8 @@ public class UpdatePostCommandHandler : IRequestHandler<UpdatePostCommand,Unit>
     public async Task<Unit> Handle(UpdatePostCommand command, CancellationToken cancellationToken)
     {
         var new_post = _mapper.Map<PostEntity>(command.UpdatePost);
-        await _postRepository.UpdateAsync(command.PostID,new_post);
+        var old_post = await _postRepository.GetByIdAsync(command.PostId,cancellationToken);
+        await _postRepository.UpdateAsync(old_post,new_post,cancellationToken);
         return Unit.Value;
     }
 }

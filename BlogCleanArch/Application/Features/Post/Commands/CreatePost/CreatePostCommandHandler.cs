@@ -21,7 +21,7 @@ public class CreatePostCommandHandler : IRequestHandler<CreatePostCommand,Unit>
     public async Task<Unit> Handle(CreatePostCommand command, CancellationToken cancellationToken)
     {
         var post = _mapper.Map<PostEntity>(command.NewPost);
-        await _postRepository.CreateAsync(post);
+        await _postRepository.CreateAsync(post,cancellationToken);
 
         return Unit.Value;
     }
